@@ -1,15 +1,15 @@
 //
-//  ViewController.h
+//  CCLChartModel.m
 //  LTHJ_Questons_chart
 //
 //  Created by 蔡春雷 on 16/6/17.
 //  Copyright © 2016年 CAICL. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "CCLChartModel.h"
 
-@interface ViewController : UIViewController
+@implementation CCLChartModel
+
 
 
 @end
-
