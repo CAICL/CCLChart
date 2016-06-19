@@ -21,6 +21,7 @@
 		6E495C861D154DFA000E35E7 /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E495C781D154DFA000E35E7 /* View+MASAdditions.m */; };
 		6E495C871D154DFA000E35E7 /* ViewController+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E495C7B1D154DFA000E35E7 /* ViewController+MASAdditions.m */; };
 		6E495C881D154DFA000E35E7 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 6E495C7C1D154DFA000E35E7 /* README.md */; };
+		6E495CDA1D163672000E35E7 /* CCLChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E495CD91D163672000E35E7 /* CCLChartView.m */; };
 		6ECCD2EE1D13A43B003B9267 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ECCD2ED1D13A43B003B9267 /* main.m */; };
 		6ECCD2F11D13A43B003B9267 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ECCD2F01D13A43B003B9267 /* AppDelegate.m */; };
 		6ECCD2F71D13A43B003B9267 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6ECCD2F51D13A43B003B9267 /* Main.storyboard */; };
@@ -30,7 +31,7 @@
 		6ECCD3191D13B2EE003B9267 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ECCD30F1D13B2EE003B9267 /* ViewController.m */; };
 		6ECCD31A1D13B2EE003B9267 /* CCLChartModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ECCD3131D13B2EE003B9267 /* CCLChartModel.m */; };
 		6ECCD31B1D13B2EE003B9267 /* CCLChartScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ECCD3171D13B2EE003B9267 /* CCLChartScrollView.m */; };
-		6ECCD31E1D13B9FF003B9267 /* CCLChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ECCD31D1D13B9FF003B9267 /* CCLChartView.m */; };
+		6ECCD31E1D13B9FF003B9267 /* CCLChartContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ECCD31D1D13B9FF003B9267 /* CCLChartContentView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +65,8 @@
 		6E495C7A1D154DFA000E35E7 /* ViewController+MASAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ViewController+MASAdditions.h"; sourceTree = "<group>"; };
 		6E495C7B1D154DFA000E35E7 /* ViewController+MASAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ViewController+MASAdditions.m"; sourceTree = "<group>"; };
 		6E495C7C1D154DFA000E35E7 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		6E495CD81D163672000E35E7 /* CCLChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLChartView.h; sourceTree = "<group>"; };
+		6E495CD91D163672000E35E7 /* CCLChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLChartView.m; sourceTree = "<group>"; };
 		6ECCD2E91D13A43B003B9267 /* LTHJ_Questons_chart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LTHJ_Questons_chart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6ECCD2ED1D13A43B003B9267 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6ECCD2EF1D13A43B003B9267 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -79,8 +82,8 @@
 		6ECCD3131D13B2EE003B9267 /* CCLChartModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLChartModel.m; sourceTree = "<group>"; };
 		6ECCD3161D13B2EE003B9267 /* CCLChartScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLChartScrollView.h; sourceTree = "<group>"; };
 		6ECCD3171D13B2EE003B9267 /* CCLChartScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLChartScrollView.m; sourceTree = "<group>"; };
-		6ECCD31C1D13B9FF003B9267 /* CCLChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLChartView.h; sourceTree = "<group>"; };
-		6ECCD31D1D13B9FF003B9267 /* CCLChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLChartView.m; sourceTree = "<group>"; };
+		6ECCD31C1D13B9FF003B9267 /* CCLChartContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLChartContentView.h; sourceTree = "<group>"; };
+		6ECCD31D1D13B9FF003B9267 /* CCLChartContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLChartContentView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,10 +222,12 @@
 		6ECCD3151D13B2EE003B9267 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				6E495CD81D163672000E35E7 /* CCLChartView.h */,
+				6E495CD91D163672000E35E7 /* CCLChartView.m */,
 				6ECCD3161D13B2EE003B9267 /* CCLChartScrollView.h */,
 				6ECCD3171D13B2EE003B9267 /* CCLChartScrollView.m */,
-				6ECCD31C1D13B9FF003B9267 /* CCLChartView.h */,
-				6ECCD31D1D13B9FF003B9267 /* CCLChartView.m */,
+				6ECCD31C1D13B9FF003B9267 /* CCLChartContentView.h */,
+				6ECCD31D1D13B9FF003B9267 /* CCLChartContentView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -299,12 +304,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				6E495C831D154DFA000E35E7 /* MASViewConstraint.m in Sources */,
-				6ECCD31E1D13B9FF003B9267 /* CCLChartView.m in Sources */,
+				6ECCD31E1D13B9FF003B9267 /* CCLChartContentView.m in Sources */,
 				6E495C881D154DFA000E35E7 /* README.md in Sources */,
 				6E495C821D154DFA000E35E7 /* MASViewAttribute.m in Sources */,
 				6ECCD2FA1D13A43B003B9267 /* LTHJ_Questons_chart.xcdatamodeld in Sources */,
 				6ECCD31B1D13B2EE003B9267 /* CCLChartScrollView.m in Sources */,
 				6ECCD3191D13B2EE003B9267 /* ViewController.m in Sources */,
+				6E495CDA1D163672000E35E7 /* CCLChartView.m in Sources */,
 				6E495C7E1D154DFA000E35E7 /* MASCompositeConstraint.m in Sources */,
 				6E495C801D154DFA000E35E7 /* MASConstraintMaker.m in Sources */,
 				6E495C861D154DFA000E35E7 /* View+MASAdditions.m in Sources */,
