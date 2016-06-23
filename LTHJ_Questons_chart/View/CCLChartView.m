@@ -127,7 +127,7 @@ const CGFloat CCLChartView_BottomMargin = 20.0;
     return _showDateAndCloseView;
 }
 
-- (CCLChartScrollView *)scrollView {
+- (UIScrollView*)scrollView {
     
 	if(_scrollView == nil) {
 		_scrollView = [[CCLChartScrollView alloc] init];
@@ -180,11 +180,13 @@ const CGFloat CCLChartView_BottomMargin = 20.0;
         frame = self.contentView.frame;
         frame.size = CGSizeMake(25 * (self.scrollView.frame.size.width / self.days), self.frame.size.height);
         self.contentView.frame = frame;
-        self.scrollView.contentSize = frame.size;
+        self.scrollView.contentSize = CGSizeMake(frame.size.width, frame.size.height);
         self.scrollView.contentOffset = CGPointMake(self.chartModelArrM.count * self.scale_X, 0);
         [self setNeedsDisplay];
         [self.contentView setNeedsDisplay];
-       // [self.contentView becomeFirstResponder];
+        NSLog(@"contentSize: %@", self.scrollView);
+  
+        
     }else {
         
         self.days = 20;
@@ -193,8 +195,8 @@ const CGFloat CCLChartView_BottomMargin = 20.0;
         frame = self.contentView.frame;
         frame.size = CGSizeMake(25 * self.scrollView.frame.size.width / self.days, self.frame.size.height);
         self.contentView.frame = frame;
-        self.scrollView.contentSize = frame.size;
-        self.scrollView.contentOffset = CGPointMake(self.chartModelArrM.count * self.scale_X, 0);
+        self.scrollView.contentSize = CGSizeMake(frame.size.width , frame.size.height);
+      //  self.scrollView.contentOffset = CGPointMake(self.chartModelArrM.count * self.scale_X, 0);
         [self setNeedsDisplay];
         [self.contentView setNeedsDisplay];
         NSLog(@"%@", self.contentView);

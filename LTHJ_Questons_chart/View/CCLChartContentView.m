@@ -69,7 +69,7 @@ static const CGFloat kMaxLineTopMargin = 10.0;
     
     float minClose = [self p_minCloseWithModelArray:[self.chartModelArrM mutableCopy]];
     
-    NSLog(@"%f - %f", maxClose, minClose);
+   // NSLog(@"%f - %f", maxClose, minClose);
 /*       
         float midValue =  max - min;
         CGFloat midPx =  kMinPoint.y - kMaxPoint.y;
@@ -110,7 +110,8 @@ static const CGFloat kMaxLineTopMargin = 10.0;
         [closePath addLineToPoint:closePoint];
     }
     [closePath stroke];
-    NSLog(@"X轴刻度: %f", self.scale_X);
+
+    NSLog(@"%@", self);
    
     self.horizontalView.hidden = YES;
     self.verticalView.hidden = YES;
