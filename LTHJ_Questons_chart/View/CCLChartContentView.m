@@ -10,63 +10,75 @@
 #import "CCLChartModel.h"
 #import "UIColor+Hex.h"
 #import "Masonry.h"
+#import "CCLChartScrollView.h"
+
 
 #define kViewHeight self.frame.size.height
 #define kViewWidth  self.frame.size.width
 
-extern const CGFloat CCLChartScrollView_LeftMargin;
-extern const CGFloat CCLChartScrollView_BottomMargin;
+extern const CGFloat CCLChartView_LeftMargin;
+extern const CGFloat CCLChartView_BottomMargin;
 
 /**
  *  最大收盘价标识线距视图顶端距离
  */
 static const CGFloat kMaxLineTopMargin = 10.0;
+
+
+@interface CCLChartContentView ()
+
 /**
- *  最小收盘价标识线距X轴距离
+ *  长按手势(长安出现"十"形线)
  */
-static const CGFloat kMinLineBottomMargin = 10.0;
+@property (nonatomic, strong) UILongPressGestureRecognizer *longPress;
+@property (nonatomic, strong) UIView *verticalView;
+@property (nonatomic, strong) UIView *horizontalView;
+@property (nonatomic, assign) CGFloat scale_Y;
+@property (nonatomic, assign) CGFloat originClose;
+@property (nonatomic, assign) CGPoint kOrigin;
+//@property (nonatomic, strong)
+
+@end
+
 
 @implementation CCLChartContentView
+
+@synthesize currentModelArrM = _currentModelArrM;
 
 - (instancetype)init
 {
     self = [super init];
     if (self) {
-        self.isZoom = false;
+//      初始化手势
+        [self addGestureRecognizer:self.longPress];
     }
     return self;
 }
+
 - (void)drawRect:(CGRect)rect {
 
-// 在Y轴上的三个标尺点
-    const CGPoint kOrigin = CGPointMake(CCLChartScrollView_LeftMargin, self.frame.size.height - CCLChartScrollView_BottomMargin);
-    const CGPoint kMaxPoint = CGPointMake(kOrigin.x, kMaxLineTopMargin);
-    const CGPoint kMinPoint = CGPointMake(kOrigin.x, kOrigin.y - kMinLineBottomMargin);
-    NSLog(@"%@", self.chartModelArrM);
+// 标尺点
+     CGPoint kOrigin = CGPointMake(0, self.frame.size.height - CCLChartView_BottomMargin);
+     CGPoint kMaxPoint = CGPointMake(0, kMaxLineTopMargin);
+    _kOrigin = kOrigin;
+    
+   
 // 计算Y轴刻度
-//    float midValue =  [self p_maxClose] - [self p_minClose];
-//    CGFloat midPx =  kMinPoint.y - kMaxPoint.y;
-    float maxClose = [self p_maxClose];
-    float minClose = [self p_minClose];
-    float originClose = minClose -  (int)minClose % 10;
-    CGFloat scale_Y = (kOrigin.y - kMaxPoint.y) / (maxClose - originClose);
-    
-    
-    
-/// Y轴刻度  收盘价 y坐标 = kOrigin.y - scale_Y * (model.chartClose.floatValue - originClose)
-    //CGFloat scale_Y = midPx / midValue;
-    NSLog(@"Y轴刻度 %lf", scale_Y);
-// 计算X轴刻度
-    int days = 0;
-    if (self.isZoom == true) {
-        days = 10;
-    }else {
-        days = 20;
-    }
-    CGFloat scale_X = [self p_scaleXwithDays:days];
-    
 
+    float maxClose = [self p_maxCloseWithModelArray:[self.chartModelArrM mutableCopy]];
     
+    float minClose = [self p_minCloseWithModelArray:[self.chartModelArrM mutableCopy]];
+    
+    NSLog(@"%f - %f", maxClose, minClose);
+/*       
+        float midValue =  max - min;
+        CGFloat midPx =  kMinPoint.y - kMaxPoint.y;
+        Y轴刻度  收盘价 y坐标 = kOrigin.y - scale_Y * (model.chartClose.floatValue - originClose)
+*/
+        _originClose = minClose -  (int)minClose % 100;    // 让最小值在X轴上方一些的位置
+        _scale_Y = (kOrigin.y - kMaxPoint.y) / (maxClose - _originClose);
+    
+    CGPoint kMinPoint = CGPointMake(0, kOrigin.y - (minClose - _originClose) * _scale_Y );
 /*
  * 绘制 最高和最低线(虚线).
  */
@@ -81,60 +93,150 @@ static const CGFloat kMinLineBottomMargin = 10.0;
     // minline
     [dashPath moveToPoint:kMinPoint];
     [dashPath addLineToPoint:CGPointMake(kViewWidth , kMinPoint.y)];
-    
     [dashPath stroke];
    
 /*
  * 绘制收盘价走势图
  */
     UIBezierPath *closePath = [UIBezierPath bezierPath];
-    closePath.lineWidth = 1;
+    closePath.lineWidth = 2;
     closePath.lineJoinStyle = 2;
     for (int i = 0; i < self.chartModelArrM.count; i++) {
         CCLChartModel *model = self.chartModelArrM[i];
-        CGPoint closePoint = CGPointMake(kOrigin.x + i * scale_X,kOrigin.y -  (model.chartClose.floatValue - originClose) * scale_Y );
-       // NSLog(@"(%lf,%lf)", closePoint.x, closePoint.y);
+        CGPoint closePoint = CGPointMake(i * self.scale_X, kOrigin.y - (model.chartClose.floatValue - _originClose) * _scale_Y );
         if (i == 0) {
             [closePath moveToPoint:closePoint];
         }
         [closePath addLineToPoint:closePoint];
-        NSLog(@"%@ %lf", model.chartDate,closePoint.y );
     }
     [closePath stroke];
-    
-     NSLog(@"height %f", kViewHeight);
-    
+    NSLog(@"X轴刻度: %f", self.scale_X);
+   
+    self.horizontalView.hidden = YES;
+    self.verticalView.hidden = YES;
 
 }
 
-#pragma 私有方法
 
-/// 返回的最高的收盘价
-- (float)p_maxClose {
+
+/// 返回最高的收盘价
+- (float)p_maxCloseWithModelArray:(NSArray *)modelArray {
     float maxClose = 0.0;
-    for (CCLChartModel *model in self.chartModelArrM) {
+    for (CCLChartModel *model in modelArray) {
         if (maxClose < model.chartClose.floatValue) {
             maxClose = model.chartClose.floatValue;
         }
     }
-    NSLog(@"最大的收盘价为%f", maxClose);
     return maxClose;
 }
 
 /// 返回最低的收盘价
-- (float)p_minClose {
+- (float)p_minCloseWithModelArray:(NSArray *)modelArray; {
     float minClose = MAXFLOAT;
-    for (CCLChartModel *model in self.chartModelArrM) {
+    for (CCLChartModel *model in modelArray) {
         if (minClose > model.chartClose.floatValue) {
             minClose = model.chartClose.floatValue;
         }
     }
-    NSLog(@"最小的收盘价为%f", minClose);
     return minClose;
 }
-/// 计算X轴刻度
-- (CGFloat)p_scaleXwithDays:(int)days {
-    
-    return ([UIScreen mainScreen].bounds.size.width - CCLChartScrollView_LeftMargin) / days;
+
+- (NSMutableArray *)currentModelArrM {
+    if(!_currentModelArrM) {
+        _currentModelArrM = [NSMutableArray array];
+        for (NSInteger i = self.chartModelArrM.count - self.days; i < self.chartModelArrM.count; i++) {
+            [_currentModelArrM addObject:self.chartModelArrM[i]];
+        }
+    }
+    return _currentModelArrM;
 }
+
+- (NSInteger)modelArrayCountMoreThanDays {
+    return self.chartModelArrM.count - self.days;
+}
+#pragma mark - 长按手势
+- (UILongPressGestureRecognizer *)longPress {
+	if(_longPress == nil) {
+        _longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(event_longPressMethod:)];
+        _longPress.minimumPressDuration = 1;
+        
+	}
+	return _longPress;
+}
+
+- (void)event_longPressMethod:(UILongPressGestureRecognizer *)longPress {
+    
+    CGPoint location = [longPress locationInView:self];
+
+    if(UIGestureRecognizerStateChanged == longPress.state || UIGestureRecognizerStateBegan == longPress.state)
+    {
+        self.superSrollView.scrollEnabled = NO;
+
+        self.verticalView.hidden = NO;
+        self.horizontalView.hidden = NO;
+        self.showDateAndCloseView.hidden = NO;
+        CGRect frame = self.verticalView.frame;
+        frame.origin.x = location.x;
+        self.verticalView.frame = frame;
+        frame = self.horizontalView.frame;
+        frame.origin.y = location.y;
+        self.horizontalView.frame = frame;
+       // 需要显示horizontalView 的 y 对应的close值  : location.y
+        //       verticalView  的 x对应的日期       : location.x
+        NSInteger dateCount = (NSInteger)location.x / self.scale_X;
+        CCLChartModel *model = self.chartModelArrM[dateCount];
+        
+        // y = kOrigin.y - (model.chartClose.floatValue - _originClose) * _scale_Y
+        //       close = (kOrigin.y - y) / _scale_y + _originClose
+        
+        CGFloat close = (_kOrigin.y - location.y) / _scale_Y + _originClose;
+        NSLog(@"%@ - %@ - %f",model.chartDate, model.chartClose, close );
+        UILabel *label = [self.showDateAndCloseView viewWithTag:111000];
+        label.text = [NSString stringWithFormat:@"%.2f",close];
+        label = [self.showDateAndCloseView viewWithTag:100000];
+        label.text = model.chartDate;
+    }
+    if (longPress.state == UIGestureRecognizerStateEnded)
+    {
+        
+        self.verticalView.hidden = YES;
+        self.horizontalView.hidden = YES;
+        self.superSrollView.scrollEnabled = YES;
+        self.showDateAndCloseView.hidden = YES;
+    }
+}
+
+- (UIView *)verticalView {
+	if(_verticalView == nil) {
+		_verticalView = [[UIView alloc] init];
+        [self addSubview:_verticalView];
+            _verticalView.backgroundColor = [UIColor redColor];
+        [_verticalView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(CGSizeMake(1.5, 200));
+            make.top.mas_equalTo(0);
+            make.left.mas_equalTo(0);
+        }];
+	}
+	return _verticalView;
+}
+
+- (UIView *)horizontalView {
+    if (_horizontalView == nil) {
+        _horizontalView = [UIView new];
+        [self addSubview:_horizontalView];
+        _horizontalView.backgroundColor = [UIColor redColor];
+        [_horizontalView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(CGSizeMake(self.frame.size.width, 1.5));
+            make.left.mas_equalTo(0);
+            make.top.mas_equalTo(50);
+        }];
+    }
+    return _horizontalView;
+}
+
+
+
+
+
+
 @end
