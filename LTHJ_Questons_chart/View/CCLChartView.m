@@ -7,9 +7,11 @@
 //
 
 #import "CCLChartView.h"
-
+#import "CCLChartModel.h"
 #import "CCLChartContentView.h"
 #import "Masonry.h"
+
+
 
 
 #define kViewHeight self.frame.size.height
@@ -17,17 +19,26 @@
 /**
  *  全局常量 chart Y轴距视图左边距
  */
-const CGFloat CCLChartView_LeftMargin = 30.0;
+const CGFloat CCLChartView_LeftMargin = 40.0;
 /**
  *  全局常量 chart X轴到视图底边距
  */
 const CGFloat CCLChartView_BottomMargin = 20.0;
 
-
 @interface CCLChartView ()
 
+@property (nonatomic, strong) UIButton *changeDaysBtn;
+/**
+ *  scrollView 的 contentView
+ */
 @property (nonatomic, strong) CCLChartContentView *contentView;
+/**
+ *  contentView 十字线 显示 的 label所在的View
+ */
 @property (nonatomic, strong) UIView *showDateAndCloseView;
+/**
+ *  当前页面显示天数
+ */
 @property (nonatomic, assign) NSInteger days;
 
 @end
@@ -38,7 +49,7 @@ const CGFloat CCLChartView_BottomMargin = 20.0;
 {
     self = [super init];
     if (self) {
-        
+        self.backgroundColor = [UIColor whiteColor];
         self.scrollView.hidden = NO;
         self.changeDaysBtn.hidden = NO;
         _days = 20;
@@ -50,42 +61,56 @@ const CGFloat CCLChartView_BottomMargin = 20.0;
     // Drawing code
     const CGPoint kOrigin = CGPointMake(CCLChartView_LeftMargin, kViewHeight -  CCLChartView_BottomMargin);
     
-    /*
-     * 绘制坐标轴
-     */
+/*
+ * 绘制坐标轴
+ */
     UIBezierPath *coordinatesPath = [UIBezierPath bezierPath];
     [coordinatesPath moveToPoint:CGPointMake(kOrigin.x, 0)];
     [coordinatesPath addLineToPoint:kOrigin];
     [coordinatesPath addLineToPoint:CGPointMake(kViewWidth, kOrigin.y)];
     
-    // 刻度
-    //self.scale_X = (kViewWidth - CCLChartView_LeftMargin) / self.days;
-    // 观察 刻度值属性的变化
-    //[self addObserver:self forKeyPath:@"scale_X" options:NSKeyValueObservingOptionNew context:nil];
     
-    for (int i = 1; i <= self.days; i++) {
-        
-        [coordinatesPath moveToPoint:CGPointMake(CCLChartView_LeftMargin + i * self.scale_X, kOrigin.y)];
-        [coordinatesPath addLineToPoint:CGPointMake(CCLChartView_LeftMargin + i * self.scale_X, kOrigin.y - 3)];
-    }
     coordinatesPath.lineWidth = 1;
     [[UIColor blackColor] setStroke];
     [coordinatesPath stroke];
-    
+/*
+ * 绘制刻度
+ */
+    UIBezierPath *scale_x_Path = [UIBezierPath bezierPath];
+    // 刻度  day - 1
+    for (int i = 1; i < self.days; i++) {
+        
+        [scale_x_Path moveToPoint:CGPointMake(CCLChartView_LeftMargin + i * self.scale_X, kOrigin.y)];
+        [scale_x_Path addLineToPoint:CGPointMake(CCLChartView_LeftMargin + i * self.scale_X, 0)];
+    }
+    scale_x_Path.lineWidth  = 0.2;
+    [[UIColor lightGrayColor] setStroke];
+    [scale_x_Path stroke];
 /* 
  *  初始化contentView
  *  初始化 十字线 显示label所在view
  */
      self.contentView.showDateAndCloseView = self.showDateAndCloseView;
     
+}
+#pragma mark - 属性 setter method
+
+- (void)setContentOffsetInScrolling:(CGPoint)contentOffsetInScrolling {
+    
+    NSAssert(self.scale_X > 0, @"scale_X必须 大于0");
+
+    CGFloat location = contentOffsetInScrolling.x / self.scale_X;
+     NSRange range = NSMakeRange((NSInteger)location, self.days);
+    self.contentView.currentPageModelArrM = [self.chartModelArrM subarrayWithRange:range];
+    [self.contentView setNeedsDisplay];
     
 }
 
 #pragma mark - Lazy Loading
 
 - (CGFloat)scale_X {
-    
-    return (kViewWidth - CCLChartView_LeftMargin) / self.days;
+    // kViewWidth - CCLChartView_LeftMargin  == self.scrollView.frame.size.width
+    return (kViewWidth - CCLChartView_LeftMargin) / (self.days - 1);
 }
 
 -(UIView *)showDateAndCloseView {
@@ -130,7 +155,7 @@ const CGFloat CCLChartView_BottomMargin = 20.0;
 - (UIScrollView*)scrollView {
     
 	if(_scrollView == nil) {
-		_scrollView = [[CCLChartScrollView alloc] init];
+		_scrollView = [[UIScrollView alloc] init];
         _scrollView.backgroundColor = [UIColor clearColor];
         _scrollView.bounces = NO;
         _scrollView.showsVerticalScrollIndicator = NO;
@@ -172,41 +197,41 @@ const CGFloat CCLChartView_BottomMargin = 20.0;
     sender.selected = !sender.selected;
     
     CGRect frame = CGRectZero;
+//
+    
     if (sender.selected) {
         
         self.days = 10;
         self.contentView.days = self.days;
         self.contentView.scale_X = self.scale_X;
         frame = self.contentView.frame;
-        frame.size = CGSizeMake(25 * (self.scrollView.frame.size.width / self.days), self.frame.size.height);
+        CGFloat width = (self.chartModelArrM.count - 1) * self.scale_X;
+        frame.size = CGSizeMake(width, kViewHeight);
         self.contentView.frame = frame;
         self.scrollView.contentSize = CGSizeMake(frame.size.width, frame.size.height);
-        self.scrollView.contentOffset = CGPointMake(self.chartModelArrM.count * self.scale_X, 0);
+        self.scrollView.contentOffset = CGPointMake((self.chartModelArrM.count- self.days) * self.scale_X, 0);
         [self setNeedsDisplay];
         [self.contentView setNeedsDisplay];
-        NSLog(@"contentSize: %@", self.scrollView);
   
-        
     }else {
         
         self.days = 20;
         self.contentView.days = self.days;
         self.contentView.scale_X = self.scale_X;
         frame = self.contentView.frame;
-        frame.size = CGSizeMake(25 * self.scrollView.frame.size.width / self.days, self.frame.size.height);
+        CGFloat width = (self.chartModelArrM.count - 1) * self.scale_X;
+        frame.size = CGSizeMake(width, kViewHeight);
         self.contentView.frame = frame;
         self.scrollView.contentSize = CGSizeMake(frame.size.width , frame.size.height);
-      //  self.scrollView.contentOffset = CGPointMake(self.chartModelArrM.count * self.scale_X, 0);
+        self.scrollView.contentOffset = CGPointMake((self.chartModelArrM.count - self.days) * self.scale_X, 0);
         [self setNeedsDisplay];
         [self.contentView setNeedsDisplay];
-        NSLog(@"%@", self.contentView);
     }
 }
 
 - (CCLChartContentView *)contentView {
     
     if(_contentView == nil) {
-        
         _contentView = [[CCLChartContentView alloc] init];
         _contentView.backgroundColor = [UIColor clearColor];
         [self.scrollView addSubview:_contentView];
@@ -217,6 +242,7 @@ const CGFloat CCLChartView_BottomMargin = 20.0;
             CGFloat contentViewWidth = self.scrollView.frame.size.width + (chartModelArrCount-20) * self.scale_X;
             _contentView.frame = CGRectMake(0, 0, contentViewWidth, kViewHeight);
         }
+        //_contentView.nodeViewSubChartView = self.nodeView;
         self.scrollView.contentSize = _contentView.frame.size;
         self.scrollView.contentOffset = CGPointMake((self.chartModelArrM.count - 20)*self.scale_X, 0);
         self.contentView.chartModelArrM  = self.chartModelArrM;
@@ -224,6 +250,8 @@ const CGFloat CCLChartView_BottomMargin = 20.0;
     }
     return _contentView;
 }
+
+
 
 
 @end

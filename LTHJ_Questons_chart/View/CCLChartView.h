@@ -7,20 +7,28 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CCLChartScrollView.h"
+
 
 extern const CGFloat CCLChartScrollView_LeftMargin;
 extern const CGFloat CCLChartScrollView_BottomMargin;
 
 @interface CCLChartView : UIView
+
+/**
+ *  用于滑动的scrollView 使用时在Controller中 设置 UIScrollView的代理
+ */
 @property (nonatomic, strong) UIScrollView  *scrollView;
-@property (nonatomic, strong) UIButton *changeDaysBtn;
+
 /**
  *  保存模型类数据的数组
  */
 @property (nonatomic, weak)   NSMutableArray *chartModelArrM;
-@property (nonatomic, assign) CGFloat scale_X;
 
+/**
+ *  使用在"UIScrollViewDelegate" 方法 scrollViewDidScroll 中 
+ *  动态接收 scrollView 滑动进行中 的滑动距离 
+ */
+@property (nonatomic, assign) CGPoint contentOffsetInScrolling;
 
 
 
