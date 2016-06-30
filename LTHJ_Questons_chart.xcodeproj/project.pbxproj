@@ -69,7 +69,7 @@
 		6ECCD2F01D13A43B003B9267 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		6ECCD2F61D13A43B003B9267 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6ECCD2F91D13A43B003B9267 /* LTHJ_Questons_chart.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = LTHJ_Questons_chart.xcdatamodel; sourceTree = "<group>"; };
-		6ECCD2FB1D13A43B003B9267 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../Assets.xcassets; sourceTree = "<group>"; };
+		6ECCD2FB1D13A43B003B9267 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6ECCD2FE1D13A43B003B9267 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6ECCD3001D13A43B003B9267 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6ECCD30E1D13B2EE003B9267 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -157,7 +157,7 @@
 				6ECCD2F01D13A43B003B9267 /* AppDelegate.m */,
 				6ECCD3151D13B2EE003B9267 /* View */,
 				6ECCD30D1D13B2EE003B9267 /* Controllers */,
-				6ECCD3141D13B2EE003B9267 /* source */,
+				6EF7A81D1D24A4C500BF60F3 /* source */,
 				6ECCD2EC1D13A43B003B9267 /* Supporting Files */,
 			);
 			path = LTHJ_Questons_chart;
@@ -201,16 +201,6 @@
 			path = ../Model;
 			sourceTree = "<group>";
 		};
-		6ECCD3141D13B2EE003B9267 /* source */ = {
-			isa = PBXGroup;
-			children = (
-				6ECCD2F51D13A43B003B9267 /* Main.storyboard */,
-				6ECCD2FB1D13A43B003B9267 /* Assets.xcassets */,
-				6ECCD2FD1D13A43B003B9267 /* LaunchScreen.storyboard */,
-			);
-			path = source;
-			sourceTree = "<group>";
-		};
 		6ECCD3151D13B2EE003B9267 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -221,6 +211,16 @@
 				6ECCD31D1D13B9FF003B9267 /* CCLChartContentView.m */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		6EF7A81D1D24A4C500BF60F3 /* source */ = {
+			isa = PBXGroup;
+			children = (
+				6ECCD2F51D13A43B003B9267 /* Main.storyboard */,
+				6ECCD2FB1D13A43B003B9267 /* Assets.xcassets */,
+				6ECCD2FD1D13A43B003B9267 /* LaunchScreen.storyboard */,
+			);
+			name = source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -325,7 +325,6 @@
 				6ECCD2F61D13A43B003B9267 /* Base */,
 			);
 			name = Main.storyboard;
-			path = ..;
 			sourceTree = "<group>";
 		};
 		6ECCD2FD1D13A43B003B9267 /* LaunchScreen.storyboard */ = {
@@ -334,7 +333,6 @@
 				6ECCD2FE1D13A43B003B9267 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

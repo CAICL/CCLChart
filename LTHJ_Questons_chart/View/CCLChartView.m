@@ -11,9 +11,6 @@
 #import "CCLChartContentView.h"
 #import "Masonry.h"
 
-
-
-
 #define kViewHeight self.frame.size.height
 #define kViewWidth  self.frame.size.width
 /**
@@ -68,7 +65,6 @@ const CGFloat CCLChartView_BottomMargin = 20.0;
     [coordinatesPath moveToPoint:CGPointMake(kOrigin.x, 0)];
     [coordinatesPath addLineToPoint:kOrigin];
     [coordinatesPath addLineToPoint:CGPointMake(kViewWidth, kOrigin.y)];
-    
     
     coordinatesPath.lineWidth = 1;
     [[UIColor blackColor] setStroke];
@@ -126,28 +122,20 @@ const CGFloat CCLChartView_BottomMargin = 20.0;
         }];
         UILabel *leftCloseLabel = [UILabel new];
 
-        leftCloseLabel.backgroundColor = [UIColor redColor];
+        //leftCloseLabel.backgroundColor = [UIColor redColor];
         leftCloseLabel.text = @"test";
-        leftCloseLabel.font = [UIFont systemFontOfSize:10];
+        leftCloseLabel.font = [UIFont systemFontOfSize:9];
         leftCloseLabel.tag = 111000;
         [_showDateAndCloseView addSubview:leftCloseLabel];
-        [leftCloseLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(0);
-            make.top.mas_equalTo(10);
-            make.height.mas_equalTo(30);
-        }];
+        leftCloseLabel.frame = CGRectMake(0, 0, 40, 20);
         UILabel *bottomDateLabel = [UILabel new];
-        bottomDateLabel.backgroundColor = [UIColor redColor];
+        //bottomDateLabel.backgroundColor = [UIColor redColor];
         bottomDateLabel.text = @"test";
         bottomDateLabel.font = [UIFont systemFontOfSize:10];
 
         bottomDateLabel.tag = 100000;
         [_showDateAndCloseView addSubview:bottomDateLabel];
-        [bottomDateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(0);
-            make.height.mas_equalTo(30);
-            make.right.mas_equalTo(-50);
-        }];
+        bottomDateLabel.frame = CGRectMake(0, kViewHeight - CCLChartView_BottomMargin, 40, 20);
     }
     return _showDateAndCloseView;
 }

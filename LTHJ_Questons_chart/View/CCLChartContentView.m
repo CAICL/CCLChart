@@ -12,6 +12,7 @@
 
 #define kViewHeight self.frame.size.height
 #define kViewWidth  self.frame.size.width
+extern const CGFloat CCLChartView_LeftMargin;
 extern const CGFloat CCLChartView_BottomMargin;
 /**
  *  最大收盘价标识线距视图顶端距离 maxPoint.y
@@ -114,7 +115,7 @@ static const CGFloat kMaxLineTopMargin = 10.0;
         [closePath addLineToPoint:closePoint];
     }
     [closePath stroke];
-    nodePath.lineWidth = 3;
+    nodePath.lineWidth = 2;
     [[UIColor blackColor] setStroke];
     [[UIColor whiteColor] setFill];
     [nodePath stroke];
@@ -165,30 +166,45 @@ static const CGFloat kMaxLineTopMargin = 10.0;
 
     if(UIGestureRecognizerStateChanged == longPress.state || UIGestureRecognizerStateBegan == longPress.state) {
         
+// 长按时显示的视图
         self.verticalView.hidden = NO;
         self.horizontalView.hidden = NO;
         self.showDateAndCloseView.hidden = NO;
+        
         CGRect frame = self.verticalView.frame;
         frame.origin.x = location.x;
         self.verticalView.frame = frame;
         frame = self.horizontalView.frame;
         frame.origin.y = location.y;
         self.horizontalView.frame = frame;
+        
        // 需要显示horizontalView 的 y 对应的close值  : location.y
         //       verticalView  的 x对应的日期       : location.x
+// 通过滑动位置计算需要显示的日期 且让日期显示在刻度线上
         NSInteger dateCount = ((NSInteger)location.x + self.scale_X / 2) / self.scale_X;
         if (dateCount > self.chartModelArrM.count - 1) {
             dateCount = self.chartModelArrM.count - 1;
         }
         CCLChartModel *model = self.chartModelArrM[dateCount];
         
-       
        // 公式 :  y = kMaxPoint.y - (( maxClose - model.chartClose.floatValue) / self.scale_Y);
         CGFloat close = _maxClose - (kMaxLineTopMargin - location.y) * self.scale_Y;
         UILabel *label = [self.showDateAndCloseView viewWithTag:111000];
         label.text = [NSString stringWithFormat:@"%.2f",close];
+        frame = label.frame;
+        frame.origin.y = location.y - (frame.size.height)/2;
+        label.frame = frame;
         label = [self.showDateAndCloseView viewWithTag:100000];
         label.text = model.chartDate;
+        frame = label.frame;
+
+        if ((kViewWidth - location.x) < frame.size.width/2) {
+            frame.origin.x = location.x - CCLChartView_BottomMargin - frame.size.width*1.5;
+        }else {
+            frame.origin.x = location.x - CCLChartView_LeftMargin - frame.size.width/2;
+        }
+        label.frame = frame;
+
     }
     if (longPress.state == UIGestureRecognizerStateEnded)
     {
@@ -206,7 +222,8 @@ static const CGFloat kMaxLineTopMargin = 10.0;
             _verticalView.backgroundColor = [UIColor redColor];
         [_verticalView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(1.5);
-            make.top.bottom.mas_equalTo(0);
+            make.top.mas_equalTo(0);
+            make.bottom.mas_equalTo(-CCLChartView_BottomMargin);
             make.left.mas_equalTo(0);
         }];
 	}
